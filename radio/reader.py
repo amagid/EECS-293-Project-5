@@ -4,6 +4,8 @@
 
 import sys
 
+LINE_FEED = '\n'
+
 class Reader:
     # Init connects the Reader to standard input
     def __init__(self):
@@ -22,22 +24,22 @@ class Reader:
 
 
     # Return the actual recipient address (SETUP METHOD)
-    def recipient_address():
+    def recipient_address(self):
         return self._recipient_address
 
 
     # Return the actual caller address (DEBUG METHOD)
-    def caller_address():
+    def caller_address(self):
         return self._caller_address
 
     
     # NEXT_MESSAGE is responsible for retrieving the next whole message
     # Returns None if we are at the end of the stream
     # Makes no promises about the formatting of a message - simply ensures the message is of the correct data type and exists
-    def next_message():
+    def next_message(self):
         output = ""
         next_char = self._next_character()
-        while next_char is not None and next_char != '\n':
+        while next_char is not None and next_char != LINE_FEED:
             output += next_char
             next_char = self._next_character()
 
