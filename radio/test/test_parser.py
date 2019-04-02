@@ -18,3 +18,31 @@ def test_address_getters():
 
     assert parser.recipient_address() == 123
     assert parser.caller_address() == 45
+
+def test_clean_value_only_valid_value():
+    parser = Parser()
+    value, leftovers = parser._clean_value("123")
+
+    assert value == 123
+    assert leftovers == ''
+
+def test_clean_value_valid_value_right_padded():
+    parser = Parser()
+    value, leftovers = parser._clean_value("123abc")
+
+    assert value == 123
+    assert leftovers == 'abc'
+
+def test_clean_value_valid_value_left_padded():
+    parser = Parser()
+    value, leftovers = parser._clean_value("abc123")
+
+    assert value == 123
+    assert leftovers == ''
+
+def test_clean_value_terminates_on_first_non_digit_after_digit_found():
+    parser = Parser()
+    value, leftovers = parser._clean_value("abc1234a56abc")
+
+    assert value == 1234
+    assert leftovers == 'a56abc'
