@@ -27,6 +27,10 @@ class Parser:
     # Returns the next whole message as an instance of the Message class
     def next_message(self):
         message = self._reader.next_message()
+        
+        if message is None:
+            return Message.INVALID
+
         command, value = self._extract_command_and_value(message)
         return Message.build(command, value)
 
