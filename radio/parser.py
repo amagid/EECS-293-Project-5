@@ -4,6 +4,7 @@
 # placement in stream.
 
 from radio.reader import Reader
+from radio.command import Command
 
 class Parser:
     # INIT method initializes a Reader to be stored internally
@@ -32,8 +33,8 @@ class Parser:
     # Reads a single raw message string and returns the command and value as best it can
     def _extract_command_and_value(self, message):
         number_start_index = self._first_digit_index(message)
-        raw_command = message_chunks[:number_start_index]
-        raw_value = message_chunks[number_start_index:]
+        raw_command = message[:number_start_index]
+        raw_value = message[number_start_index:]
 
         command = Command.closest_match(raw_command)
         value, leftovers = self._clean_value(raw_value)
