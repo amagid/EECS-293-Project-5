@@ -24,8 +24,8 @@ class Command(Enum):
 
         for key in score_dictionary:
             score_dictionary[key] -= abs(len(key) - len(raw_command))
-            score_dictionary[key] += self._letters_in_common(raw_command)
-        
+            score_dictionary[key] += Command(key)._letters_in_common(raw_command)
+
         return self._command_with_highest_score(score_dictionary)
         # Return the entry with the highest score. If there is a tie, return INVALID. If no commands have a positive score, return INVALID.
 
