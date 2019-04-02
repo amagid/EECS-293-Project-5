@@ -68,12 +68,16 @@ class Parser:
             elif found_number:
                 break
 
-        value = None
-        try:
-            value = int(value_string)
-        except:
-            pass
+        value = self._parse_clean_value_string(value_string)
             
         leftovers = raw_value[final_index+1:]
         return value, leftovers
+
+    def _parse_clean_value_string(self, value_string):
+        try:
+            return int(value_string)
+        except:
+            pass
+
+        return None
 
