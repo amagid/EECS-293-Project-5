@@ -63,7 +63,12 @@ class Parser:
             elif found_number:
                 break
 
-        value = int(value_string)
+        value = None
+        try:
+            value = int(value_string)
+        except:
+            pass
+            
         leftovers = raw_value[final_index+1:]
         return value, leftovers
 
