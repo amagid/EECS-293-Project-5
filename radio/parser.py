@@ -48,7 +48,7 @@ class Parser:
 
     
     # Parses a potential value, separates and returns the first "good" value it sees as well as the leftovers
-    def _clean_value(raw_value):
+    def _clean_value(self, raw_value):
         value_string = ""
         found_number = False
         final_index = -1
