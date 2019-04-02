@@ -11,6 +11,8 @@ class Reader:
     def __init__(self, stream = None):
         # Try to read recipient and caller addresses.
         # If fails for any reason, close the input stream (marks reader invalid)
+        self._recipient_address = None
+        self._caller_address = None
         try:
             self._input = stream or sys.stdin
             self._recipient_address = int(self._input.readline())

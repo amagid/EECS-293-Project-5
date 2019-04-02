@@ -32,6 +32,9 @@ class Radio:
     # message. Reading a message of a particular type kicks off parsing further for that type of message.
     # This method also swallows all exceptions when in production to ensure no raw errors ever make it back to the client.
     def attempt_connect(self):
+        if not self.is_valid():
+            return str(ConnectionState.FAILURE)
+
         try:
             while self.is_valid() and not self.connection_valid():
                 message = self._parser.next_message()
@@ -40,10 +43,7 @@ class Radio:
             return str(self.connection_state())
 
         except Exception as e:
-            if not Radio.DEBUG:
-                return str(ConnectionState.FAILURE)
-            else:
-                raise e
+            return str(ConnectionState.FAILURE)
 
     def _parse_to(self, message):
         if self._state.current_section is Command.THISIS:
@@ -101,7 +101,7 @@ class Radio:
 
     # CONNECTION_VALID is a public method returning whether or not the connection is currently valid
     def connection_valid(self):
-        return self._to_address == self._parser.recipient_address() and self._from_address == self._parser.caller_address()
+        return self._to_address == self._parser.recipient_address() and isinstance(self._parser.recipient_address(), int) and self._from_address == self._parser.caller_address() and isinstance(self._parser.caller_address(), int)
 
 
     # _FAILED_CONNECTION_STATE returns the proper failure ConnectionState based on the current state information
