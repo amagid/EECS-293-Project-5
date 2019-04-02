@@ -2,23 +2,33 @@
 # ensuring they are of the correct type and exist before passing them to the
 # Parser.
 
+import sys
+
 class Reader:
-    pass
-    # Initializer connects the Reader to standard input
-    # INIT():
-    #     store input stream in self._input
-    #     store caller address in self._caller_address
-    #     store recipient address in self._recipient_address
+    # Init connects the Reader to standard input
+    def __init__(self):
+        # Try to read recipient and caller addresses.
+        # If fails for any reason, invalidate the input stream
+        try:
+            self._input = sys.stdin
+            self._recipient_address = int(self._input.readline())
+            self._caller_address = int(self._input.readline())
+        except:
+            self._input = None
+
+        # If addresses were not set for any reason, invalidate the input stream
+        if not isinstance(self.recipient_address(), int) and not isinstance(self.caller_address(), int):
+            self._input = None
 
 
-    # # Return the actual recipient address (SETUP METHOD)
-    # RECIPIENT_ADDRESS():
-    #     return self._recipient_address
+    # Return the actual recipient address (SETUP METHOD)
+    def recipient_address():
+        return self._recipient_address
 
 
-    # # Return the actual caller address (DEBUG METHOD)
-    # CALLER_ADDRESS():
-    #     return self._caller_address
+    # Return the actual caller address (DEBUG METHOD)
+    def caller_address():
+        return self._caller_address
 
     
     # # NEXT_MESSAGE is responsible for retrieving the next whole message
