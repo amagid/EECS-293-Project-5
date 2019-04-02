@@ -52,3 +52,26 @@ def test_letters_in_common(test_case):
     result = command._command_with_highest_score(score_dictionary)
 
     assert result == expected
+
+
+CLOSEST_MATCH_TEST_CASES = [
+    ("TO", Command.TO),
+    ("REP", Command.REP),
+    ("THISIS", Command.THISIS),
+    ("OTO", Command.TO),
+    ("TOO", Command.TO),
+    ("ROP", Command.REP),
+    ("GARBLED", Command.INVALID),
+    ("", Command.INVALID)
+]
+@pytest.mark.parametrize(
+    'test_case', CLOSEST_MATCH_TEST_CASES
+)
+def test_letters_in_common(test_case):
+    command = Command.INVALID
+    raw_command = test_case[0]
+    expected = test_case[1]
+
+    result = command.closest_match(raw_command)
+
+    assert result is expected
