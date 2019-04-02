@@ -6,7 +6,11 @@ The purpose of this project is to read simulated radio connection input from a f
 
 On a basic level, there are three layers to the system: Radio, Parser, and Reader. Parser and Reader form a barricade against invalid input, with Reader handling missing and wrong-type input and Parser handling poorly formatted but correct-type inputs. This allows Radio to simply take exclusively valid input and only handle high-level protocol errors, such as messages coming in the incorrect order.
 
-The Parser and Reader assume that some degree of incorrectness is acceptable for improved robustness. Therefore, there are some cases where a "best guess" is made when receiving garbled input. If the guess is above a certain reliability threshold, it is returned as absolutely VALID. If not, it is stated as absolutely INVALID.
+The Parser and Reader assume that some degree of incorrectness is acceptable for improved robustness. Therefore, there are some cases where a "best guess" is made when receiving garbled input. If the guess is above a certain reliability threshold, it is returned as absolutely VALID. If not, it is stated as absolutely INVALID. This essentially makes a preference for robustness over correctness.
+
+Errors are almost entirely handled locally by each class to keep the parts of the program appropriately modular. Each successive module of the program simply asserts that the previous module has done its job in processing the input. That is, Radio asserts that it only receives Message objects and handles high-level protocol issues itself. Parser asserts that it only receives input that exists and is of the correct type and internally handles improperly formatted or garbled messages. Reader is on the front-lines, and therefore makes no assertions, and internally handles all input type issues. These layers of assertions also help to ensure each successive class is operating properly to its specification, as it will fail loudly if not.
+
+To address the concerns of attackers gleaning useful information about the internal workings of the program through error messages, the only returns of the system are a connection state and a vague reason such as "invalid caller" or "invalid recipient". The program implements a centralized backup for unexpected error handling at the top level. This is achieved since the program's main method, Radio.ATTEMPT_CONNECT(), surrounds its entire content in a try-catch. If a static DEBUG flag is true, any caught errors will be returned. If it is false, the caught errors will be logged quietly and swallowed. This way, no raw exceptions are ever returned to the client when in production.
 
 ## Classes
 
@@ -179,6 +183,9 @@ The Radio class is the master class of the program. It initializes an internally
 ```py
 class Radio:
 
+    # Controls whether or not exceptions are returned
+    DEBUG = False
+
     # INIT initializes this Radio with an internal Parser
     INIT():
         initialize a Parser and store it in self._parser
@@ -194,18 +201,25 @@ class Radio:
     
     # ATTEMPT_CONNECT is the main method. Reads messages one at a time and parses major message sections based on the received
     # message. Reading a message of a particular type kicks off parsing further for that type of message.
+    # This method also swallows all exceptions when in production to ensure no raw errors ever make it back to the client.
     ATTEMPT_CONNECT():
-        store self._parser.NEXT_MESSAGE() in message
-        while message is not None and not CONNECTION_VALID():
-            read message.Command and run associated parser stored in self._command_parsers
+        try:
+            store self._parser.NEXT_MESSAGE() in message
+            while message is not None and not CONNECTION_VALID():
+                read message.Command and run associated parser stored in self._command_parsers
 
-        initialize connection_state
-        if CONNECTION_VALID():
-            store ConnectionState.CONNECTED in connection_state
-        else:
-            store _FAILED_CONNECTION_STATE() in connection_state
+            initialize connection_state
+            if CONNECTION_VALID():
+                store ConnectionState.CONNECTED in connection_state
+            else:
+                store _FAILED_CONNECTION_STATE() in connection_state
 
-        return string representation of connection_state
+            return string representation of connection_state
+        catch Exception e:
+            if not DEBUG:
+                return string representation of generic FAILURE ConnectionState
+            else:
+                return string representation of received error
 
 
     # CONNECTION_VALID is a public method returning whether or not the connection is currently valid
