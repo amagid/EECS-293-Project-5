@@ -46,3 +46,27 @@ def test_clean_value_terminates_on_first_non_digit_after_digit_found():
 
     assert value == 1234
     assert leftovers == 'a56abc'
+
+def test_first_digit_index_only_digit():
+    parser = Parser()
+    index = parser._first_digit_index("1")
+
+    assert index == 0
+
+def test_first_digit_index_empty_input():
+    parser = Parser()
+    index = parser._first_digit_index("")
+
+    assert index == 0
+
+def test_first_digit_index_no_digits():
+    parser = Parser()
+    index = parser._first_digit_index("abc")
+
+    assert index == 3
+
+def test_first_digit_index_left_padded():
+    parser = Parser()
+    index = parser._first_digit_index("abcd1")
+
+    assert index == 4
