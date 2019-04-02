@@ -12,7 +12,7 @@ from radio.radio_state import RadioState
 
 class Radio:
     # Controls whether or not exceptions are returned
-    DEBUG = False
+    DEBUG = True
 
     # INIT initializes this Radio with an internal Parser
     def __init__(self, stream = None):
@@ -112,9 +112,9 @@ class Radio:
     # _CHECK_RECIPIENT_ERROR returns the appropriate RECIPIENT_ERROR ConnectionState based on the current state information
     # Returns None if there is no issue with the recipient information
     def _check_recipient_error(self):
-        if not self._to_address or not self._to_address.isdigit():
+        if not self._to_address or not isinstance(self._to_address, int):
             return ConnectionState.FAILURE_INVALID_RECIPIENT
-        elif self._to_address.isdigit() and int(self._to_address) != self._parser.recipient_address():
+        elif isinstance(self._to_address, int) and self._to_address != self._parser.recipient_address():
             return ConnectionState.FAILURE_RECIPIENT_NOT_ME
         else:
             return None
@@ -123,7 +123,7 @@ class Radio:
     # _CHECK_CALLER_ERROR returns the appropriate CALLER_ERROR ConnectionState based on the current state information
     # Returns None if there is no issue with the caller information
     def _check_caller_error(self):
-        if not self._from_address or not self._from_address.isdigit():
+        if not self._from_address or not isinstance(self._from_address, int):
             return ConnectionState.FAILURE_INVALID_CALLER
         else:
             return None
