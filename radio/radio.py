@@ -25,7 +25,7 @@ class Radio:
             Command.THISIS: self._parse_thisis,
             Command.INVALID: self._parse_invalid
         }
-        self._state = RadioState(Command.INVALID, 0, '')
+        self._state = RadioState(Command.INVALID, 0, '', 0)
 
     
     # ATTEMPT_CONNECT is the main method. Reads messages one at a time and parses major message sections based on the received
@@ -33,7 +33,7 @@ class Radio:
     # This method also swallows all exceptions when in production to ensure no raw errors ever make it back to the client.
     def attempt_connect(self):
         try:
-            while self._parser.is_valid() and not self.connection_valid():
+            while self.is_valid() and not self.connection_valid():
                 message = self._parser.next_message()
                 self._command_parsers[message.command()](message)
 
@@ -53,10 +53,12 @@ class Radio:
         self._state.current_section = Command.TO
         self._state.repeats += 1
         self._state.partial_address = str(message.value())
+        self._state.invalid_count = 0
 
     def _parse_rep(self, message):
         if self._state.current_section is Command.THISIS or self._state.current_section is Command.TO:
             self._state.partial_address += str(message.value())
+            self._state.invalid_count = 0
 
     def _parse_thisis(self, message):
         if self._state.current_section is Command.TO:
@@ -66,9 +68,11 @@ class Radio:
         self._state.current_section = Command.THISIS
         self._state.repeats += 1
         self._state.partial_address = str(message.value())
+        self._state.invalid_count = 0
 
     def _parse_invalid(self, message):
         self._commit_state()
+        self._state.invalid_count += 1
 
     def _commit_state(self):
         if self._state.current_section is Command.TO:
@@ -80,6 +84,7 @@ class Radio:
         self._state.current_section = Command.INVALID
         self._state.repeats = 0
         self._state.partial_address = ''
+        self._state.invalid_count = 0
 
     # connection_state checks if we can validly connect with the current status
     # and returns a ConnectionState appropriate to that conditional.
@@ -101,7 +106,7 @@ class Radio:
 
     # _FAILED_CONNECTION_STATE returns the proper failure ConnectionState based on the current state information
     def _failed_connection_state(self):
-        return _check_recipient_error() or _check_caller_error() or None
+        return self._check_recipient_error() or self._check_caller_error() or None
 
 
     # _CHECK_RECIPIENT_ERROR returns the appropriate RECIPIENT_ERROR ConnectionState based on the current state information
@@ -122,4 +127,7 @@ class Radio:
             return ConnectionState.FAILURE_INVALID_CALLER
         else:
             return None
+
+    def is_valid(self):
+        return self._state.invalid_count < 10 and self._parser.is_valid()
 
