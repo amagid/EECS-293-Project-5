@@ -9,7 +9,6 @@ from radio.command import Command
 from radio.message import Message
 from radio.connection_state import ConnectionState
 from radio.radio_state import RadioState
-
 class Radio:
     # Controls whether or not exceptions are returned
     DEBUG = True
@@ -39,7 +38,6 @@ class Radio:
             while self.is_valid() and not self.connection_valid():
                 message = self._parser.next_message()
                 self._command_parsers[message.command()](message)
-
             return str(self.connection_state())
 
         except Exception as e:
@@ -49,7 +47,6 @@ class Radio:
         if self._state.current_section is Command.THISIS:
             self._commit_state()
             self._reset_state()
-
         self._state.current_section = Command.TO
         self._state.repeats += 1
         self._state.partial_address = str(message.value())

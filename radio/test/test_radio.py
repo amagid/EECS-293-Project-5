@@ -13,6 +13,7 @@ INTEGRATION_TEST_CASES = [
     ("123\n45\nGARBLED\nREP 2\nREP 3\nTHISIS 4\nREP 5\n", ConnectionState.FAILURE_INVALID_RECIPIENT),
     ("123\n45\nTO 1\nREP 2\nREP 3\nGARBLED\nREP 5\n", ConnectionState.FAILURE_RECIPIENT_NOT_ME),
     ("123\n45\nTO 1\nREP 2\nREP 3\nTHISIS \n", ConnectionState.FAILURE_INVALID_CALLER),
+    ("123\n45\nTO 1\nREP 2\nREP 3\nTHISIS 4\nREP 5\nTO 2\n", ConnectionState.CONNECTED),
     ("", ConnectionState.FAILURE),
 ]
 @pytest.mark.parametrize(
