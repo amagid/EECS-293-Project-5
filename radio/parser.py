@@ -5,6 +5,7 @@
 
 from radio.reader import Reader
 from radio.command import Command
+from radio.message import Message
 
 class Parser:
     # INIT method initializes a Reader to be stored internally
