@@ -26,6 +26,12 @@ build:
 		pip install -e .; \
 	)
 
+run:
+	( \
+		source venv/bin/activate; \
+		cat test.txt | ./cli.py; \
+	)
+
 clean:
 	rm -rf venv/
 	rm -rf .tox/
