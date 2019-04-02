@@ -49,6 +49,24 @@ def test_clean_value_terminates_on_first_non_digit_after_digit_found():
     assert value == 1234
     assert leftovers == 'a56abc'
 
+PARSE_CLEAN_VALUE_TEST_CASES = [
+    ("", None),
+    ("1", 1),
+    ("ABC", None),
+    (None, None)
+]
+@pytest.mark.parametrize(
+    'test_case', PARSE_CLEAN_VALUE_TEST_CASES
+)
+def test_next_message_invalid(test_case):
+    raw_value = test_case[0]
+    expected_value = test_case[1]
+    parser = Parser()
+
+    result = parser._parse_clean_value_string(raw_value)
+
+    assert result == expected_value
+
 def test_first_digit_index_only_digit():
     parser = Parser()
     index = parser._first_digit_index("1")
