@@ -260,7 +260,7 @@ The ConnectionState class represents the current state of the connection. CONNEC
 ```py
 enum ConnectionState:
     CONNECTED = ""
-    FAILURE = ""
+    FAILURE = " generic error"
     FAILURE_INVALID_RECIPIENT = " invalid recipient"
     FAILURE_RECIPIENT_NOT_ME = " recipient not me"
     FAILURE_INVALID_CALLER = " invalid caller"
