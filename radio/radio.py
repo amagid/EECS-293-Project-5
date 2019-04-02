@@ -24,6 +24,11 @@ class Radio:
             Command.THISIS: self._parse_thisis,
             Command.INVALID: self._parse_invalid
         }
+        self._state = {
+            current_section: Command.INVALID,
+            repeats: 0,
+            partial_address: ''
+        }
 
     
     # ATTEMPT_CONNECT is the main method. Reads messages one at a time and parses major message sections based on the received
@@ -44,7 +49,13 @@ class Radio:
                 raise e
 
     def _parse_to(self, message):
-        pass
+        if self._state.current_section is Command.THISIS:
+            self._commit_state()
+            self._reset_state()
+
+        self._state.current_section = Command.TO
+        self._state.repeats += 1
+        self._state.partial_address = message.value()
 
     def _parse_rep(self, message):
         pass
@@ -54,6 +65,17 @@ class Radio:
 
     def _parse_invalid(self, message):
         pass
+
+    def _commit_state(self):
+        if self._state.current_section is Command.TO:
+            self._to_address = self._state.partial_address
+        else if self._state.current_section is Command.THISIS:
+            self._from_address = self._state.partial_address
+
+    def _reset_state(self):
+        self._state.current_section = Command.INVALID
+        self._state.repeats = 0
+        self._state.partial_address = ''
 
     # connection_state checks if we can validly connect with the current status
     # and returns a ConnectionState appropriate to that conditional.
