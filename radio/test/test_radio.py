@@ -9,7 +9,8 @@ from radio.connection_state import ConnectionState
 INTEGRATION_TEST_CASES = [
     ("123\n45\nTO 1\nREP 2\n REP 3\nTHISIS 4\nREP 5\n", ConnectionState.CONNECTED),
     ("123\n45\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nREP 2\nREP 3\nTHISIS 4\nREP 5\n", ConnectionState.CONNECTED),
-    ("123\n45\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nREP 2\nGARBLED\nREP 3\nTHISIS 4\nREP 5\n", ConnectionState.CONNECTED)
+    ("123\n45\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nTO 1\nREP 2\nGARBLED\nREP 3\nTHISIS 4\nREP 5\n", ConnectionState.CONNECTED),
+    ("123\n45\nGARBLED\nREP 2\nREP 3\nTHISIS 4\nREP 5\n", ConnectionState.FAILURE_INVALID_RECIPIENT),
 ]
 @pytest.mark.parametrize(
     'test_case', INTEGRATION_TEST_CASES
