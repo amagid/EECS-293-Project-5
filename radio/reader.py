@@ -45,7 +45,7 @@ class Reader:
     # _NEXT_CHARACTER is an internal method responsible for reading the next character from the input stream
     # Returns None if there is no next character
     def _next_character(self):
-        return not self._input.closed and self._input.read(1) or None
+        return (self.is_valid() and self._input.read(1)) or None
 
     # is_valid returns whether this reader is valid or not.
     # Can be valid and empty.
