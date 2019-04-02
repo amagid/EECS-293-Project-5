@@ -46,6 +46,8 @@ class Parser:
             if message[index].isdigit():
                 return index
 
+        return len(message)
+
     
     # Parses a potential value, separates and returns the first "good" value it sees as well as the leftovers
     def _clean_value(self, raw_value):
