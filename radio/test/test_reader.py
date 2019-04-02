@@ -40,3 +40,10 @@ def test_init_bad_stream():
     input_backup.cleanup()
 
     assert not reader.is_valid()
+
+def test_init_short_stream():
+    input_backup = ReplaceStdIn("123\n")
+    reader = Reader()
+    input_backup.cleanup()
+
+    assert not reader.is_valid()
