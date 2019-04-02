@@ -2,33 +2,37 @@
 # a command and a value.
 
 class Message:
-    pass
-    # # The static INVALID Message instance is used for any message that cannot be parsed reliably
-    # INVALID = Message(None, None)
+    # The static INVALID Message instance is used for any message that cannot be parsed reliably
+    INVALID = None
 
-    # # The INIT method takes a Command instance and a numerical value and stores them
-    # INIT(command, value):
-    #     store command in self._command
-    #     store value in self._value
-
-
-    # # Builds a new Message instance. Returns the INVALID instance if the given inputs are invalid
-    # BUILD(command, value):
-    #     if command or value is None, return the INVALID Message instance.
-    #     else return a newly initialized Message
+    # The INIT method takes a Command instance and a numerical value and stores them
+    def __init__(self, command, value):
+        self._command = command
+        self._value = value
 
 
-    # # Retrieve the stored Command
-    # COMMAND():
-    #     return self._command
+    # Builds a new Message instance. Returns the INVALID instance if the given inputs are invalid
+    @staticmethod
+    def build(command, value):
+        if command is not None and value is not None:
+            return Message(command, value)
+        else:
+            return Message.INVALID
 
 
-    # # Retrive the stored Value
-    # VALUE():
-    #     return self._value
+    # Retrieve the stored Command
+    def command(self):
+        return self._command
 
 
-    # # Check whether or not this Message is valid
-    # IS_VALID():
-    #     return self != INVALID Message instance
+    # Retrive the stored Value
+    def value(self):
+        return self._value
 
+
+    # Check whether or not this Message is valid
+    def is_valid(self):
+        return self != Message.INVALID
+
+# Initialize INVALID message
+Message.INVALID = Message(None, None)
