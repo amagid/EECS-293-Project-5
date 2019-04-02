@@ -1,15 +1,7 @@
 import pytest
 import sys
-from io import StringIO
 from radio.reader import Reader
-
-class ReplaceStdIn:
-    def __init__(self, input):
-        self._STDIN = sys.stdin
-        sys.stdin = StringIO(input)
-
-    def cleanup(self):
-        sys.stdin = self._STDIN
+from radio.test.utils import ReplaceStdIn
 
 def test_init_valid_input():
     input_backup = ReplaceStdIn("123\n45\nTO 1\n")
