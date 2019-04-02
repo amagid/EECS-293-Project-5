@@ -31,15 +31,20 @@ class Parser:
     
     # Reads a single raw message string and returns the command and value as best it can
     def _extract_command_and_value(message):
-        message_chunks = message.split(' ', 1)
-        raw_command = message_chunks[0]
-        raw_value = message_chunks[1]
+        number_start_index = self._first_digit_index(message)
+        raw_command = message_chunks[:number_start_index]
+        raw_value = message_chunks[number_start_index:]
 
         command = Command.closest_match(raw_command)
         value, leftovers = self._clean_value(raw_value)
 
         self._leftovers = leftovers
         return command, value
+
+    def _first_digit_index(message):
+        for index in range(len(message)):
+            if message[index].isdigit():
+                return index
 
     
     # Parses a potential value, separates and returns the first "good" value it sees as well as the leftovers
