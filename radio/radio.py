@@ -19,10 +19,10 @@ class Radio:
         self._to_address = None
         self._from_address = None 
         self._command_parsers = {
-            Command.TO: self._PARSE_TO,
-            Command.REP: self._PARSE_LONE_REP,
-            Command.THISIS: self._PARSE_THISIS,
-            Command.INVALID: self._PARSE_INVALID
+            Command.TO: self._parse_to,
+            Command.REP: self._parse_rep,
+            Command.THISIS: self._parse_thisis,
+            Command.INVALID: self._parse_invalid
         }
 
     
@@ -42,6 +42,18 @@ class Radio:
                 return str(ConnectionState.FAILURE)
             else:
                 raise e
+
+    def _parse_to(self, message):
+        pass
+
+    def _parse_rep(self, message):
+        pass
+
+    def _parse_thisis(self, message):
+        pass
+
+    def _parse_invalid(self, message):
+        pass
 
     # connection_state checks if we can validly connect with the current status
     # and returns a ConnectionState appropriate to that conditional.
