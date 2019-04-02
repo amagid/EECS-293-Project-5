@@ -73,6 +73,7 @@ class Parser:
         leftovers = raw_value[final_index+1:]
         return value, leftovers
 
+    # Converts a cleaned value string to an int or None if not possible
     def _parse_clean_value_string(self, value_string):
         try:
             return int(value_string)
