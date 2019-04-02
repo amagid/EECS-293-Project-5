@@ -23,7 +23,7 @@ class Command(Enum):
         }
 
         for key in score_dictionary:
-            score_dictionary[key] -= abs(len(self.value) - len(raw_command))
+            score_dictionary[key] -= abs(len(key) - len(raw_command))
             score_dictionary[key] += self._letters_in_common(raw_command)
         
         return _command_with_highest_score(score_dictionary)
