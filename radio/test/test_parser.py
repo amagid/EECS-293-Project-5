@@ -86,7 +86,7 @@ EXTRACT_COMMAND_AND_VALUE_TEST_CASES = [
 @pytest.mark.parametrize(
     'test_case', EXTRACT_COMMAND_AND_VALUE_TEST_CASES
 )
-def test_extract_command_and_value_empty_input(test_case):
+def test_extract_command_and_value(test_case):
     parser = Parser()
     message = test_case[0]
     expected_command = test_case[1]
@@ -96,5 +96,3 @@ def test_extract_command_and_value_empty_input(test_case):
 
     assert command is expected_command
     assert value == expected_value
-
-    
