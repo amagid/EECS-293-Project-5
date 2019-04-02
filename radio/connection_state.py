@@ -1,0 +1,2 @@
+class ConnectionState():
+    pass
