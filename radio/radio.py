@@ -35,19 +35,25 @@ class Radio:
                 message = self._parser.next_message()
                 self._command_parsers[message.command()](message)
 
-            connection_state = None
-            if CONNECTION_VALID():
-                connection_state = ConnectionState.CONNECTED
-            else:
-                connection_state = _FAILED_CONNECTION_STATE()
+            return str(self.connection_state())
 
-            return str(connection_state)
-            
         except Exception as e:
             if not DEBUG:
                 return str(ConnectionState.FAILURE)
             else:
                 raise e
+
+    # connection_state checks if we can validly connect with the current status
+    # and returns a ConnectionState appropriate to that conditional.
+    def connection_state(self):
+        state = None
+        if CONNECTION_VALID():
+            state = ConnectionState.CONNECTED
+        else:
+            state = _FAILED_CONNECTION_STATE()
+
+        return state
+
 
 
     # # CONNECTION_VALID is a public method returning whether or not the connection is currently valid
