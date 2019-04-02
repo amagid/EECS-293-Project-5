@@ -14,7 +14,7 @@ The Parser and Reader assume that some degree of incorrectness is acceptable for
 
 The Reader class is responsible for reading inputs from the input stream and ensuring they are of the correct type and exist before passing them to the Parser.
 
-
+```py
 class Reader:
 
     # Initializer connects the Reader to standard input
@@ -57,13 +57,13 @@ class Reader:
     # _INPUT_STREAM_VALID detecs whether the input stream is still valid
     _INPUT_STREAM_VALID():
         return True if input stream is still open and has more characters in it
-
+```
 
 #### Parser
 
 The Parser class is responsible for taking the proper-type whole messages from the Reader and parsing them into valid-type messages. The scope of the Parser is limited to a single message, so it does not verify message order or placement in stream.
 
-
+```py
 class Parser:
 
     # INIT method initializes a Reader to be stored internally
@@ -105,13 +105,13 @@ class Parser:
         store read digits as a number in value
         store remainder of message to right of value in leftovers
         return value, leftovers
-
+```
 
 #### Message
 
 The Message class represents a cleaned and parsed single message, containing a command and a value.
 
-
+```py
 class Message:
 
     # The static INVALID Message instance is used for any message that cannot be parsed reliably
@@ -142,13 +142,13 @@ class Message:
     # Check whether or not this Message is valid
     IS_VALID():
         return self != INVALID Message instance
-
+```
 
 #### Command (Enum)
 
 The Command Enumeration represents all of the valid commands, and includes a method for finding the closest matching Command instance based on a string input.
 
-
+```py
 enum Command:
     
     TO = "TO"
@@ -170,12 +170,13 @@ enum Command:
             Add one point for each letter the key of the entry has in common with the raw command
 
         Return the entry with the highest score. If there is a tie, return INVALID. If no commands have a positive score, return INVALID.
-
+```
 
 #### Radio
 
 The Radio class is the master class of the program. It initializes an internally stored Parser and uses it to read valid, sanitized Messages from the input stream. It is responsible only for handling high-level protocol errors, and expects that all received Messages will be correctly formatted and exist, or otherwise be marked as INVALID.
 
+```py
 class Radio:
 
     # INIT initializes this Radio with an internal Parser
@@ -236,12 +237,13 @@ class Radio:
     _CHECK_CALLER_ERROR():
         if self._from_address is invalid or missing, return ConnectionState.FAILURE_INVALID_CALLER
         else return None
-
+```
 
 #### ConnectionState (Enum)
 
 The ConnectionState class represents the current state of the connection. CONNECTED state is static, while FAILURE is a method generating a failed state with the given reason.
 
+```py
 enum ConnectionState:
     CONNECTED = ""
     FAILURE = ""
@@ -254,3 +256,4 @@ enum ConnectionState:
         if self is ConnectionState.CONNECTED, append "true" to output
         else append "false" to output
         append enum instance value to output
+```
