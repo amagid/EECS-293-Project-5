@@ -31,15 +31,17 @@ class Reader:
         return self._caller_address
 
     
-    # # NEXT_MESSAGE is responsible for retrieving the next whole message
-    # # Returns None if we are at the end of the stream
-    # # Makes no promises about the formatting of a message - simply ensures the message is of the correct data type and exists
-    # NEXT_MESSAGE():
-    #     initialize string output to empty string
-    #     if _NEXT_CHARACTER() is not a newline:
-    #         append _NEXT_CHARACTER() to output string
+    # NEXT_MESSAGE is responsible for retrieving the next whole message
+    # Returns None if we are at the end of the stream
+    # Makes no promises about the formatting of a message - simply ensures the message is of the correct data type and exists
+    def next_message():
+        output = ""
+        next_char = self._next_character()
+        while next_char is not None and next_char != '\n':
+            output += next_char
+            next_char = self._next_character()
 
-    #     return output string
+        return output
 
 
     # # _NEXT_CHARACTER is an internal method responsible for reading the next character from the input stream
