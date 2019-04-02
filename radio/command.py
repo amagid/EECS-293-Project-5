@@ -30,14 +30,16 @@ class Command(Enum):
         # Return the entry with the highest score. If there is a tie, return INVALID. If no commands have a positive score, return INVALID.
 
     # Return the Command with the highest score in the provided score
-    # dictionary. If any scores tie for top or no scores are above 0, return INVALID.
+    # dictionary. If no scores are above 0, return INVALID.
     def _command_with_highest_score(self, score_dictionary):
+        assert isinstance(score_dictionary, dict)
+
+        score_dictionary[Command.INVALID.value] = 0
+
         best_match = Command.INVALID.value
         for key in score_dictionary:
-            if best_match is Command.INVALID.value or score_dictionary[key] > score_dictionary[best_match]:
+            if score_dictionary[key] > score_dictionary[best_match]:
                 best_match = key
-            elif score_dictionary[key] == score_dictionary[best_match]:
-                return Command.INVALID
 
         return Command(best_match)
 
