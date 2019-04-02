@@ -2,6 +2,7 @@ import pytest
 import sys
 from radio.parser import Parser
 from radio.test.utils import ReplaceStdIn
+from radio.command import Command
 
 def test_init_assigns_properties():
     input_backup = ReplaceStdIn("123\n45\nTO 1\n")
@@ -70,3 +71,23 @@ def test_first_digit_index_left_padded():
     index = parser._first_digit_index("abcd1")
 
     assert index == 4
+
+
+EXTRACT_COMMAND_AND_VALUE_TEST_CASES = [
+    ("", Command.INVALID, None)
+]
+@pytest.mark.parametrize(
+    'test_case', EXTRACT_COMMAND_AND_VALUE_TEST_CASES
+)
+def test_extract_command_and_value_empty_input(test_case):
+    parser = Parser()
+    message = test_case[0]
+    expected_command = test_case[1]
+    expected_value = test_case[2]
+
+    command, value = parser._extract_command_and_value(message)
+
+    assert command is expected_command
+    assert value == expected_value
+
+    
