@@ -133,7 +133,7 @@ NEXT_MESSAGE_INVALID_TEST_CASES = [
     'test_case', NEXT_MESSAGE_INVALID_TEST_CASES
 )
 def test_next_message_invalid(test_case):
-    message = test_case[0]
+    message = test_case
     input_backup = ReplaceStdIn("123\n45\n" + message + '\n')
     parser = Parser()
 
