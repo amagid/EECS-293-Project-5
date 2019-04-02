@@ -4,7 +4,7 @@ from radio.radio import Radio
 import io
 
 if __name__ == '__main__':
-    stream = open("./test.txt")
-    radio = Radio(stream)
+    
+    radio = Radio()
     result = radio.attempt_connect()
     print(result)

@@ -29,7 +29,7 @@ build:
 run:
 	( \
 		source venv/bin/activate; \
-		cat test.txt | ./cli.py; \
+		./cli.py; \
 	)
 
 clean:
