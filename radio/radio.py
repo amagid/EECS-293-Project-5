@@ -58,7 +58,8 @@ class Radio:
         self._state.partial_address = message.value()
 
     def _parse_rep(self, message):
-        pass
+        if self._state.current_section is Command.THISIS or self._state.current_section is Command.TO:
+            self._state.partial_address += message.value()
 
     def _parse_thisis(self, message):
         pass
@@ -92,7 +93,7 @@ class Radio:
 
     # CONNECTION_VALID is a public method returning whether or not the connection is currently valid
     def connection_valid():
-        return self._state.to_address == self._parser.recipient_address() and self._state.from_address == self._parser.caller_address()
+        return self._to_address == self._parser.recipient_address() and self._from_address == self._parser.caller_address()
 
 
     # _FAILED_CONNECTION_STATE returns the proper failure ConnectionState based on the current state information
@@ -103,9 +104,9 @@ class Radio:
     # _CHECK_RECIPIENT_ERROR returns the appropriate RECIPIENT_ERROR ConnectionState based on the current state information
     # Returns None if there is no issue with the recipient information
     def _check_recipient_error():
-        if not self._state.to_address or not self._state.to_address.isdigit():
+        if not self._to_address or not self._to_address.isdigit():
             return ConnectionState.FAILURE_INVALID_RECIPIENT
-        elif self._state.to_address.isdigit() and int(self._state.to_address) != self._parser.recipient_address():
+        elif self._to_address.isdigit() and int(self._to_address) != self._parser.recipient_address():
             return ConnectionState.FAILURE_RECIPIENT_NOT_ME
         else:
             return None
@@ -114,7 +115,7 @@ class Radio:
     # _CHECK_CALLER_ERROR returns the appropriate CALLER_ERROR ConnectionState based on the current state information
     # Returns None if there is no issue with the caller information
     def _check_caller_error():
-        if not self._state.from_address or not self._state.from_address.isdigit():
+        if not self._from_address or not self._from_address.isdigit():
             return ConnectionState.FAILURE_INVALID_CALLER
         else:
             return None
