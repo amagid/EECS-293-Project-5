@@ -13,7 +13,8 @@ class Command(Enum):
     # CLOSEST_MATCH takes a string representation of a command and returns the
     # closest matching Command, or Command.INVALID if the raw_command is really
     # far off.
-    def closest_match(self, raw_command):
+    @staticmethod
+    def closest_match(raw_command):
         assert isinstance(raw_command, str)
 
         score_dictionary = {
@@ -26,12 +27,13 @@ class Command(Enum):
             score_dictionary[key] -= abs(len(key) - len(raw_command))
             score_dictionary[key] += Command(key)._letters_in_common(raw_command)
 
-        return self._command_with_highest_score(score_dictionary)
+        return Command._command_with_highest_score(score_dictionary)
         # Return the entry with the highest score. If there is a tie, return INVALID. If no commands have a positive score, return INVALID.
 
     # Return the Command with the highest score in the provided score
     # dictionary. If no scores are above 0, return INVALID.
-    def _command_with_highest_score(self, score_dictionary):
+    @staticmethod
+    def _command_with_highest_score(score_dictionary):
         assert isinstance(score_dictionary, dict)
 
         score_dictionary[Command.INVALID.value] = 0
