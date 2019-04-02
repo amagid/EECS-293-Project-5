@@ -46,13 +46,13 @@ class Reader:
         return output
 
 
-    # # _NEXT_CHARACTER is an internal method responsible for reading the next character from the input stream
-    # # Returns None if there is no next character
-    # _NEXT_CHARACTER():
-    #     if _INPUT_STREAM_VALID():
-    #         return next character from input stream
-    #     else:
-    #         return None
+    # _NEXT_CHARACTER is an internal method responsible for reading the next character from the input stream
+    # Returns None if there is no next character
+    def _next_character(self):
+        if self._input_stream_valid():
+            return self._input.read()
+        else:
+            return None
 
 
     # # _INPUT_STREAM_VALID detecs whether the input stream is still valid
