@@ -4,45 +4,50 @@
 # errors, and expects that all received Messages will be correctly formatted
 # and exist, or otherwise be marked as INVALID.
 
-class Radio:
-    pass
-    # # Controls whether or not exceptions are returned
-    # DEBUG = False
+from radio.parser import Parser
+from radio.command import Command
+from radio.message import Message
+from radio.connection_state import ConnectionState
 
-    # # INIT initializes this Radio with an internal Parser
-    # INIT():
-    #     initialize a Parser and store it in self._parser
-    #     initialize self._to_address to None
-    #     initialize self._from_address to None 
-    #     initialize self._command_parsers to a dictionary containing {
-    #         Message.TO = self._PARSE_TO,
-    #         Message.REP = self._PARSE_LONE_REP,
-    #         Message.THISIS = self._PARSE_THISIS,
-    #         Message.INVALID = self._PARSE_INVALID
-    #     }
+class Radio:
+    # Controls whether or not exceptions are returned
+    DEBUG = False
+
+    # INIT initializes this Radio with an internal Parser
+    def __init__(self):
+        self._parser = Parser()
+        self._to_address = None
+        self._from_address = None 
+        self._command_parsers = {
+            Command.TO: self._PARSE_TO,
+            Command.REP: self._PARSE_LONE_REP,
+            Command.THISIS: self._PARSE_THISIS,
+            Command.INVALID: self._PARSE_INVALID
+        }
 
     
-    # # ATTEMPT_CONNECT is the main method. Reads messages one at a time and parses major message sections based on the received
-    # # message. Reading a message of a particular type kicks off parsing further for that type of message.
-    # # This method also swallows all exceptions when in production to ensure no raw errors ever make it back to the client.
-    # ATTEMPT_CONNECT():
-    #     try:
-    #         store self._parser.NEXT_MESSAGE() in message
-    #         while message is not None and not CONNECTION_VALID():
-    #             read message.Command and run associated parser stored in self._command_parsers
+    # ATTEMPT_CONNECT is the main method. Reads messages one at a time and parses major message sections based on the received
+    # message. Reading a message of a particular type kicks off parsing further for that type of message.
+    # This method also swallows all exceptions when in production to ensure no raw errors ever make it back to the client.
+    def attempt_connect(self):
+        try:
+            while self._parser.is_valid() and not CONNECTION_VALID():
+                message = self._parser.next_message()
+                self._command_parsers[message.command()](message)
 
-    #         initialize connection_state
-    #         if CONNECTION_VALID():
-    #             store ConnectionState.CONNECTED in connection_state
-    #         else:
-    #             store _FAILED_CONNECTION_STATE() in connection_state
+            connection_state = None
+            if CONNECTION_VALID():
+                connection_state = ConnectionState.CONNECTED
+            else:
+                connection_state = _FAILED_CONNECTION_STATE()
 
-    #         return string representation of connection_state
-    #     catch Exception e:
-    #         if not DEBUG:
-    #             return string representation of generic FAILURE ConnectionState
-    #         else:
-    #             return string representation of received error
+            return str(connection_state)
+            
+        except Exception as e:
+            if not DEBUG:
+                return str(ConnectionState.FAILURE)
+            else:
+                raise e
 
 
     # # CONNECTION_VALID is a public method returning whether or not the connection is currently valid
