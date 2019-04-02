@@ -76,7 +76,7 @@ class Radio:
     def _commit_state(self):
         if self._state.current_section is Command.TO:
             self._to_address = self._state.partial_address
-        else if self._state.current_section is Command.THISIS:
+        elif self._state.current_section is Command.THISIS:
             self._from_address = self._state.partial_address
 
     def _reset_state(self):
