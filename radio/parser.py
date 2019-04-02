@@ -28,7 +28,7 @@ class Parser:
     def next_message(self):
         message = self._reader.next_message()
         command, value = self._extract_command_and_value(message)
-        return Message(command, value)
+        return Message.build(command, value)
 
     
     # Reads a single raw message string and returns the command and value as best it can
