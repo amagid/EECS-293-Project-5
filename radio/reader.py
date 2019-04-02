@@ -8,11 +8,11 @@ LINE_FEED = '\n'
 
 class Reader:
     # Init connects the Reader to standard input
-    def __init__(self):
+    def __init__(self, stream = None):
         # Try to read recipient and caller addresses.
         # If fails for any reason, close the input stream (marks reader invalid)
         try:
-            self._input = sys.stdin
+            self._input = stream or sys.stdin
             self._recipient_address = int(self._input.readline())
             self._caller_address = int(self._input.readline())
         except:

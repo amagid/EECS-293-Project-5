@@ -37,4 +37,4 @@ class Message:
         return self != Message.INVALID
 
 # Initialize INVALID message
-Message.INVALID = Message(None, None)
+Message.INVALID = Message(Command.INVALID, None)

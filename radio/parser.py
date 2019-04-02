@@ -9,8 +9,8 @@ from radio.message import Message
 
 class Parser:
     # INIT method initializes a Reader to be stored internally
-    def __init__(self):
-        self._reader = Reader()
+    def __init__(self, stream = None):
+        self._reader = Reader(stream)
         self._leftovers = None
 
     
@@ -81,4 +81,7 @@ class Parser:
             pass
 
         return None
+
+    def is_valid(self):
+        return self._reader.is_valid()
 

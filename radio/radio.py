@@ -15,8 +15,8 @@ class Radio:
     DEBUG = False
 
     # INIT initializes this Radio with an internal Parser
-    def __init__(self):
-        self._parser = Parser()
+    def __init__(self, stream = None):
+        self._parser = Parser(stream)
         self._to_address = None
         self._from_address = None 
         self._command_parsers = {
@@ -33,7 +33,7 @@ class Radio:
     # This method also swallows all exceptions when in production to ensure no raw errors ever make it back to the client.
     def attempt_connect(self):
         try:
-            while self._parser.is_valid() and not CONNECTION_VALID():
+            while self._parser.is_valid() and not self.connection_valid():
                 message = self._parser.next_message()
                 self._command_parsers[message.command()](message)
 
@@ -52,11 +52,11 @@ class Radio:
 
         self._state.current_section = Command.TO
         self._state.repeats += 1
-        self._state.partial_address = message.value()
+        self._state.partial_address = str(message.value())
 
     def _parse_rep(self, message):
         if self._state.current_section is Command.THISIS or self._state.current_section is Command.TO:
-            self._state.partial_address += message.value()
+            self._state.partial_address += str(message.value())
 
     def _parse_thisis(self, message):
         if self._state.current_section is Command.TO:
@@ -65,16 +65,16 @@ class Radio:
 
         self._state.current_section = Command.THISIS
         self._state.repeats += 1
-        self._state.partial_address = message.value()
+        self._state.partial_address = str(message.value())
 
     def _parse_invalid(self, message):
-        pass
+        self._commit_state()
 
     def _commit_state(self):
         if self._state.current_section is Command.TO:
-            self._to_address = self._state.partial_address
+            self._to_address = int(self._state.partial_address)
         elif self._state.current_section is Command.THISIS:
-            self._from_address = self._state.partial_address
+            self._from_address = int(self._state.partial_address)
 
     def _reset_state(self):
         self._state.current_section = Command.INVALID
@@ -95,18 +95,18 @@ class Radio:
 
 
     # CONNECTION_VALID is a public method returning whether or not the connection is currently valid
-    def connection_valid():
+    def connection_valid(self):
         return self._to_address == self._parser.recipient_address() and self._from_address == self._parser.caller_address()
 
 
     # _FAILED_CONNECTION_STATE returns the proper failure ConnectionState based on the current state information
-    def _failed_connection_state():
+    def _failed_connection_state(self):
         return _check_recipient_error() or _check_caller_error() or None
 
 
     # _CHECK_RECIPIENT_ERROR returns the appropriate RECIPIENT_ERROR ConnectionState based on the current state information
     # Returns None if there is no issue with the recipient information
-    def _check_recipient_error():
+    def _check_recipient_error(self):
         if not self._to_address or not self._to_address.isdigit():
             return ConnectionState.FAILURE_INVALID_RECIPIENT
         elif self._to_address.isdigit() and int(self._to_address) != self._parser.recipient_address():
@@ -117,7 +117,7 @@ class Radio:
 
     # _CHECK_CALLER_ERROR returns the appropriate CALLER_ERROR ConnectionState based on the current state information
     # Returns None if there is no issue with the caller information
-    def _check_caller_error():
+    def _check_caller_error(self):
         if not self._from_address or not self._from_address.isdigit():
             return ConnectionState.FAILURE_INVALID_CALLER
         else:
