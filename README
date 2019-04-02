@@ -1,0 +1,39 @@
+This is a barebones project template that will run on the server
+Before starting you need:
+Python3.6
+pip
+venv (`pip3 install venv`)
+
+
+To start, run `make install`. This will set up a virtual environment in the current directory under venv/.
+Read more on venv here (before asking me questions):
+https://virtualenv.pypa.io/en/latest/
+https://virtualenv.pypa.io/en/latest/installation/
+https://virtualenv.pypa.io/en/latest/userguide/#usage
+
+
+The Makefile I have provided for you does not require you to activate your virtualenv.
+If you did not understand what that last sentence meant, please read above resources.
+If you wish to activate your virtualenv, read above resources.
+
+The Makefile runs all tests in {Project}/test/
+To run tests, simply run `make run`
+
+If you want to clean up the __pycache__ folders or borked the install, run
+`make clean`
+
+
+How python packages work:
+https://docs.python.org/3/reference/import.html
+https://www.datacamp.com/community/tutorials/modules-in-python (ignore search path part)
+
+How this project makes imports work:
+In the Makefile, this is the line that makes the magic happen:
+`pip install -e .`
+This line installs our local project into pip, enabling our packages to be imported.
+This installation is handled via the setup.py (read more):
+https://stackoverflow.com/questions/1471994/what-is-setup-py
+
+Inside of the gone project, there is are demo files that try to show how importing is done.
+Follow this pattern to the best of your ability.
+If you have questions, read up on how packages work (above) and then talk to me if you need more help.
