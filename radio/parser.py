@@ -53,8 +53,8 @@ class Parser:
         found_number = False
         final_index = -1
         for index in range(len(raw_value)):
-            if character.isdigit():
-                value_string += character
+            if raw_value[index].isdigit():
+                value_string += raw_value[index]
                 found_number = True
                 final_index = index
             elif found_number:
