@@ -8,6 +8,7 @@ from radio.parser import Parser
 from radio.command import Command
 from radio.message import Message
 from radio.connection_state import ConnectionState
+from radio.radio_state import RadioState
 
 class Radio:
     # Controls whether or not exceptions are returned
@@ -24,11 +25,7 @@ class Radio:
             Command.THISIS: self._parse_thisis,
             Command.INVALID: self._parse_invalid
         }
-        self._state = {
-            current_section: Command.INVALID,
-            repeats: 0,
-            partial_address: ''
-        }
+        self._state = RadioState(Command.INVALID, 0, '')
 
     
     # ATTEMPT_CONNECT is the main method. Reads messages one at a time and parses major message sections based on the received
@@ -43,7 +40,7 @@ class Radio:
             return str(self.connection_state())
 
         except Exception as e:
-            if not DEBUG:
+            if not Radio.DEBUG:
                 return str(ConnectionState.FAILURE)
             else:
                 raise e
