@@ -44,7 +44,7 @@ COMMAND_WITH_HIGHEST_SCORE_TEST_CASES = [
 @pytest.mark.parametrize(
     'test_case', COMMAND_WITH_HIGHEST_SCORE_TEST_CASES
 )
-def test_letters_in_common(test_case):
+def test_command_with_highest_score(test_case):
     command = Command.INVALID
     score_dictionary = test_case[0]
     expected = test_case[1]
@@ -67,7 +67,7 @@ CLOSEST_MATCH_TEST_CASES = [
 @pytest.mark.parametrize(
     'test_case', CLOSEST_MATCH_TEST_CASES
 )
-def test_letters_in_common(test_case):
+def test_closest_match(test_case):
     command = Command.INVALID
     raw_command = test_case[0]
     expected = test_case[1]
