@@ -63,20 +63,25 @@ class Radio:
 
     # _FAILED_CONNECTION_STATE returns the proper failure ConnectionState based on the current state information
     def _failed_connection_state():
-        return _CHECK_RECIPIENT_ERROR() or _CHECK_CALLER_ERROR() or None
+        return _check_recipient_error() or _check_caller_error() or None
 
 
-    # # _CHECK_RECIPIENT_ERROR returns the appropriate RECIPIENT_ERROR ConnectionState based on the current state information
-    # # Returns None if there is no issue with the recipient information
-    # _CHECK_RECIPIENT_ERROR():
-    #     if self._to_address is invalid or missing, return ConnectionState.FAILURE_INVALID_RECIPIENT
-    #     elif self._to_address is valid but not my address, return ConnectionState.FAILURE_RECIPIENT_NOT_ME
-    #     else return None
+    # _CHECK_RECIPIENT_ERROR returns the appropriate RECIPIENT_ERROR ConnectionState based on the current state information
+    # Returns None if there is no issue with the recipient information
+    def _check_recipient_error():
+        if not self._state.to_address or not self._state.to_address.isdigit():
+            return ConnectionState.FAILURE_INVALID_RECIPIENT
+        elif self._state.to_address.isdigit() and int(self._state.to_address) != self._parser.recipient_address():
+            return ConnectionState.FAILURE_RECIPIENT_NOT_ME
+        else:
+            return None
 
 
-    # # _CHECK_CALLER_ERROR returns the appropriate CALLER_ERROR ConnectionState based on the current state information
-    # # Returns None if there is no issue with the caller information
-    # _CHECK_CALLER_ERROR():
-    #     if self._from_address is invalid or missing, return ConnectionState.FAILURE_INVALID_CALLER
-    #     else return None
+    # _CHECK_CALLER_ERROR returns the appropriate CALLER_ERROR ConnectionState based on the current state information
+    # Returns None if there is no issue with the caller information
+    def _check_caller_error():
+        if not self._state.from_address or not self._state.from_address.isdigit():
+            return ConnectionState.FAILURE_INVALID_CALLER
+        else:
+            return None
 
