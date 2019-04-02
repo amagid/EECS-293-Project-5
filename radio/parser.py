@@ -23,14 +23,14 @@ class Parser:
 
     
     # Returns the next whole message as an instance of the Message class
-    def next_message():
+    def next_message(self):
         message = self._reader.next_message()
         command, value = self._extract_command_and_value(message)
         return Message(command, value)
 
     
     # Reads a single raw message string and returns the command and value as best it can
-    def _extract_command_and_value(message):
+    def _extract_command_and_value(self, message):
         number_start_index = self._first_digit_index(message)
         raw_command = message_chunks[:number_start_index]
         raw_value = message_chunks[number_start_index:]
@@ -41,7 +41,7 @@ class Parser:
         self._leftovers = leftovers
         return command, value
 
-    def _first_digit_index(message):
+    def _first_digit_index(self, message):
         for index in range(len(message)):
             if message[index].isdigit():
                 return index
