@@ -1,6 +1,8 @@
 # The Message class represents a cleaned and parsed single message, containing
 # a command and a value.
 
+from radio.command import Command
+
 class Message:
     # The static INVALID Message instance is used for any message that cannot be parsed reliably
     INVALID = None
@@ -14,7 +16,7 @@ class Message:
     # Builds a new Message instance. Returns the INVALID instance if the given inputs are invalid
     @staticmethod
     def build(command, value):
-        if command is not None and value is not None:
+        if isinstance(command, Command) and command is not Command.INVALID and value is not None:
             return Message(command, value)
         else:
             return Message.INVALID
