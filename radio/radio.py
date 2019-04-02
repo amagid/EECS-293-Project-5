@@ -47,29 +47,23 @@ class Radio:
     # and returns a ConnectionState appropriate to that conditional.
     def connection_state(self):
         state = None
-        if CONNECTION_VALID():
+        if self.connection_valid():
             state = ConnectionState.CONNECTED
         else:
-            state = _FAILED_CONNECTION_STATE()
+            state = self._failed_connection_state()
 
         return state
 
 
 
-    # # CONNECTION_VALID is a public method returning whether or not the connection is currently valid
-    # CONNECTION_VALID():
-    #     return True if self._to_address is equal to self._parser.RECIPIENT_ADDRESS() and self._from_address is a valid number equal to self._parser.CALLER_ADDRESS()
+    # CONNECTION_VALID is a public method returning whether or not the connection is currently valid
+    def connection_valid():
+        return self._state.to_address == self._parser.recipient_address() and self._state.from_address == self._parser.caller_address()
 
 
-    # # _FAILED_CONNECTION_STATE returns the proper failure ConnectionState based on the current state information
-    # _FAILED_CONNECTION_STATE():
-    #     initialize error to _CHECK_RECIPIENT_ERROR()
-    #     if error is None
-    #         set error to _CHECK_CALLER_ERROR()
-    #     if error is still None
-    #         set error to ConnectionState.FAILURE
-
-    #     return error
+    # _FAILED_CONNECTION_STATE returns the proper failure ConnectionState based on the current state information
+    def _failed_connection_state():
+        return _CHECK_RECIPIENT_ERROR() or _CHECK_CALLER_ERROR() or None
 
 
     # # _CHECK_RECIPIENT_ERROR returns the appropriate RECIPIENT_ERROR ConnectionState based on the current state information
