@@ -62,7 +62,13 @@ class Radio:
             self._state.partial_address += message.value()
 
     def _parse_thisis(self, message):
-        pass
+        if self._state.current_section is Command.TO:
+            self._commit_state()
+            self._reset_state()
+
+        self._state.current_section = Command.THISIS
+        self._state.repeats += 1
+        self._state.partial_address = message.value()
 
     def _parse_invalid(self, message):
         pass
