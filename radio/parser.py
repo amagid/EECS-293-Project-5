@@ -31,7 +31,7 @@ class Parser:
     
     # Reads a single raw message string and returns the command and value as best it can
     def _extract_command_and_value(message):
-        message_chunks = message.split(' ')
+        message_chunks = message.split(' ', 1)
         raw_command = message_chunks[0]
         raw_value = message_chunks[1]
 
