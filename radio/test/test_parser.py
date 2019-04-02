@@ -74,7 +74,14 @@ def test_first_digit_index_left_padded():
 
 
 EXTRACT_COMMAND_AND_VALUE_TEST_CASES = [
-    ("", Command.INVALID, None)
+    ("", Command.INVALID, None),
+    ("1", Command.INVALID, 1),
+    ("TO 1", Command.TO, 1),
+    ("TO1", Command.TO, 1),
+    ("TO1)", Command.TO, 1),
+    ("RE5P", Command.REP, 5),
+    ("RFPG4", Command.REP, 4),
+    ("TO8TO8TO8", Command.TO, 8)
 ]
 @pytest.mark.parametrize(
     'test_case', EXTRACT_COMMAND_AND_VALUE_TEST_CASES
