@@ -49,6 +49,10 @@ class Command(Enum):
     def _letters_in_common(self, raw_command):
         assert isinstance(raw_command, str)
 
+        # Guard against INVALID Command case
+        if self.value is None:
+            return 0
+
         self_index = 0
         letters_in_common = 0
         
