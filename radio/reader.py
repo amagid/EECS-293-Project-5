@@ -10,16 +10,12 @@ class Reader:
     # Init connects the Reader to standard input
     def __init__(self):
         # Try to read recipient and caller addresses.
-        # If fails for any reason, close the input stream
+        # If fails for any reason, close the input stream (marks reader invalid)
         try:
             self._input = sys.stdin
             self._recipient_address = int(self._input.readline())
             self._caller_address = int(self._input.readline())
         except:
-            self._input.close()
-
-        # If addresses were not set for any reason, close the input stream
-        if not self._input.closed and (not isinstance(self.recipient_address(), int) or not isinstance(self.caller_address(), int)):
             self._input.close()
 
 
