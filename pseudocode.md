@@ -14,6 +14,7 @@ The Parser and Reader assume that some degree of incorrectness is acceptable for
 
 The Reader class is responsible for reading inputs from the input stream and ensuring they are of the correct type and exist before passing them to the Parser.
 
+
 class Reader:
 
     # Initializer connects the Reader to standard input
@@ -62,6 +63,7 @@ class Reader:
 
 The Parser class is responsible for taking the proper-type whole messages from the Reader and parsing them into valid-type messages. The scope of the Parser is limited to a single message, so it does not verify message order or placement in stream.
 
+
 class Parser:
 
     # INIT method initializes a Reader to be stored internally
@@ -109,6 +111,7 @@ class Parser:
 
 The Message class represents a cleaned and parsed single message, containing a command and a value.
 
+
 class Message:
 
     # The static INVALID Message instance is used for any message that cannot be parsed reliably
@@ -144,6 +147,7 @@ class Message:
 #### Command (Enum)
 
 The Command Enumeration represents all of the valid commands, and includes a method for finding the closest matching Command instance based on a string input.
+
 
 enum Command:
     
