@@ -43,11 +43,16 @@ class Reader:
             output += next_char
             next_char = self._next_character()
 
-        return output
+        return output or None
 
 
     # _NEXT_CHARACTER is an internal method responsible for reading the next character from the input stream
     # Returns None if there is no next character
     def _next_character(self):
         return not self._input.closed and self._input.read(1) or None
+
+    # is_valid returns whether this reader is valid or not.
+    # Can be valid and empty.
+    def is_valid(self):
+        return not self._input.closed and isinstance(self.recipient_address(), int) and isinstance(self.caller_address(), int)
 

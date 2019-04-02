@@ -11,12 +11,32 @@ class ReplaceStdIn:
     def cleanup(self):
         sys.stdin = self._STDIN
 
-def test_init():
-    input_backup = ReplaceStdIn("123\n45\n")
-
+def test_init_valid_input():
+    input_backup = ReplaceStdIn("123\n45\nTO 1\n")
     reader = Reader()
-
     input_backup.cleanup()
 
     assert reader.recipient_address() == 123
     assert reader.caller_address() == 45
+
+def test_init_bad_recipient():
+    input_backup = ReplaceStdIn("abc\n45\nTO 1\n")
+    reader = Reader()
+    input_backup.cleanup()
+
+    assert not reader.is_valid()
+
+def test_init_bad_caller():
+    input_backup = ReplaceStdIn("123\nde\nTO 1\n")
+    reader = Reader()
+    input_backup.cleanup()
+
+    assert not reader.is_valid()
+
+def test_init_bad_stream():
+    input_backup = ReplaceStdIn("abc\n45\nTO 1\n")
+    sys.stdin.close()
+    reader = Reader()
+    input_backup.cleanup()
+
+    assert not reader.is_valid()
