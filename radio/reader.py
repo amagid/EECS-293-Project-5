@@ -52,5 +52,5 @@ class Reader:
     # is_valid returns whether this reader is valid or not.
     # Can be valid and empty.
     def is_valid(self):
-        return not self._input.closed and isinstance(self.recipient_address(), int) and isinstance(self.caller_address(), int)
+        return all([not self._input.closed, isinstance(self.recipient_address(), int), isinstance(self.caller_address(), int)])
 
