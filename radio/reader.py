@@ -17,7 +17,7 @@ class Reader:
             self._input = stream or sys.stdin
             self._recipient_address = int(self._input.readline())
             self._caller_address = int(self._input.readline())
-        except:
+        except ValueError:
             self._input.close()
 
 
