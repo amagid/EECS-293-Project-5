@@ -44,13 +44,8 @@ class Radio:
             return str(ConnectionState.FAILURE)
 
     def _parse_to(self, message):
-        if self._state.current_section is Command.THISIS:
-            self._commit_state()
-            self._reset_state()
-        self._state.current_section = Command.TO
-        self._state.repeats += 1
-        self._state.partial_address = str(message.value())
-        self._state.invalid_count = 0
+        self._finalize_previous_parse(Command.THISIS)
+        self._add_command_to_state(Command.TO, message)
 
     def _parse_rep(self, message):
         if self._state.current_section is Command.THISIS or self._state.current_section is Command.TO:
@@ -58,18 +53,23 @@ class Radio:
             self._state.invalid_count = 0
 
     def _parse_thisis(self, message):
-        if self._state.current_section is Command.TO:
-            self._commit_state()
-            self._reset_state()
-
-        self._state.current_section = Command.THISIS
-        self._state.repeats += 1
-        self._state.partial_address = str(message.value())
-        self._state.invalid_count = 0
+        self._finalize_previous_parse(Command.TO)
+        self._add_command_to_state(Command.THISIS, message)
 
     def _parse_invalid(self, message):
         self._commit_state()
         self._state.invalid_count += 1
+
+    def _add_command_to_state(self, command_type, message):
+        self._state.current_section = command_type
+        self._state.repeats += 1
+        self._state.partial_address = str(message.value())
+        self._state.invalid_count = 0
+
+    def _finalize_previous_parse(self, command_type):
+        if self._state.current_section is command_type:
+            self._commit_state()
+            self._reset_state()
 
     def _commit_state(self):
         if self._state.current_section is Command.TO:
